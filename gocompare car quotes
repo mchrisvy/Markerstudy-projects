@@ -1,0 +1,21 @@
+-- aggregate functions 
+-- group by
+SELECT
+CONVERT(varchar, AggQuote_DateTime, 23) as QuoteDate
+,COUNT(AggQuote_TransactionID) as Quote_ID
+,CASE WHEN AggQuote_ProvisionalPremium = 99999 THEN 'Decline' ELSE 'Accept' END AS DeclineFlag
+,AggQuote_PolicyType
+,AggQuote_SourceOfBusiness
+,AggQuote_Underwriter
+,Proposer_PreviousInsurancePaymentMethod_DUQ
+FROM AggregatorConsolidated.CDL.AggregatorConsolidated
+WHERE AggQuote_DateTime >= '2023-1-1'
+AND AggQuote_PolicyType = 'PC'
+AND AggQuote_ProvisionalPremium between 1 and 7500
+and AggQuote_SourceOfBusiness = 'gocompare.com'
+Group By CONVERT(varchar, AggQuote_DateTime, 23)
+,AggQuote_PolicyType
+,CASE WHEN AggQuote_ProvisionalPremium = 99999 THEN 'Decline' ELSE 'Accept' END
+,AggQuote_SourceOfBusiness
+,AggQuote_Underwriter
+,Proposer_PreviousInsurancePaymentMethod_DUQ
