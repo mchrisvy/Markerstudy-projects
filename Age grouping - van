@@ -1,0 +1,44 @@
+--group age groups together case when
+SELECT
+Policy_SoldFlag
+,Policy_Reference
+,Price_IPPWithIRI
+,Price_NWP
+,Policy_Underwriter
+,Price_IRI
+,Price_IPP
+,Price_IRIRate
+,Price_InterestRate
+,Price_DepositRate
+,KPI_CancellationFlag
+,Policy_classofuse
+,case when policy_classofuse like 'sdp%' then 'consumer' else 'commercial' end as consumersommercial
+,Price_BrokerCommission + Price_BrokerDiscount + price_brokerfee as Price_Commission
+,KPI_AddOnCommSum
+,KPI_FinancedFlag
+,Policy_Source
+-- group ages together
+, case
+              when Proposer_Age between 17 and 25 then '17-25'
+
+              when Proposer_Age between 26 and 35 then '26-35'
+
+              when Proposer_Age between 36 and 45 then '36-45'
+
+              when Proposer_Age between 46 and 59 then '46-59'
+
+              when Proposer_Age >=60 then '60+'
+
+              else 'blank'
+
+              end as Proposer_age 
+
+,proposer_age
+,Proposer_HomeOwner
+,Proposer_Postcode_Area
+,DATEADD(DAY, 2 - DATEPART(WEEKDAY, Policy_SoldDate), CAST(Policy_SoldDate AS DATE)) as Week_SoldDate
+,case when Policy_SoldDate >= '2023-04-20' then 'Post'
+ when Policy_SoldDate between DATEADD(day, -((DATEDIFF(day, '2023-04-20',GETDATE()))), '2023-04-20') and '2023-04-20' then 'Pre'
+else NULL end as InterestTrial
+FROM Pricing_DataMart.Pricing.CDLRadarSales
+where Policy_SoldDate >= '2023-01-01' and Policy_Product = 'Van' and Policy_EventType = 'NB'
