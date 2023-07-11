@@ -1,0 +1,211 @@
+///creating a new table from another table to give factor scores
+
+
+--drop table if exists Pricing_DB.Pricing.Van_DebtBandingsCalculator_Current
+
+SELECT [Policy_Reference]
+      ,[Policy_SoldDate]
+      ,[Policy_SoldFlag]
+      ,[Policy_Product]
+      ,[KPI_FinancedFlag]
+      ,[Policy_EventType]
+      ,[Policy_ClassOfUse]
+
+      ,[Enrichment_Delphi]
+	  ,case when Enrichment_Delphi between 0 and 549 then 2.3022
+			when Enrichment_Delphi between 550 and 599 then 1.9486
+			when Enrichment_Delphi between 600 and 649 then 1.6492
+			when Enrichment_Delphi between 650 and 699 then 1.3959
+			when Enrichment_Delphi between 700 and 749 then 1.1815
+			when Enrichment_Delphi between 750 and 799 then 1.0
+			when Enrichment_Delphi between 800 and 849 then 0.8464
+			when Enrichment_Delphi between 850 and 899 then 0.7164
+			when Enrichment_Delphi between 900 and 999 then 0.6063
+			when Enrichment_Delphi IS NULL then 2.72
+		end as Calc_Delphi
+      ,[Enrichment_ID]
+	  ,case
+			when Enrichment_ID IS NULL then 1
+			when Enrichment_ID between 0 and 399 then 1.2755
+			when Enrichment_ID between 400 and 999999 then 1
+		end as calc_ID
+      ,[Enrichment_NCD]
+	  ,case
+			when Enrichment_NCD is NULL then 1
+			when Enrichment_NCD = 'A' then 1
+			when Enrichment_NCD = 'B' then 0.9578
+			when Enrichment_NCD = 'C' then 0.9173
+			when Enrichment_NCD = 'D' then 0.8786
+			when Enrichment_NCD = 'E' then 0.8415
+			when Enrichment_NCD = 'F' then 0.8060
+			when Enrichment_NCD = 'G' then 0.7719
+			when Enrichment_NCD = 'H' then 0.7393
+			when Enrichment_NCD = 'I' then 0.7081
+			when Enrichment_NCD = 'J' then 0.6782
+			when Enrichment_NCD = 'K' then 0.6496
+			when Enrichment_NCD = 'L' then 0.6221
+			when Enrichment_NCD = 'M' then 0.5959
+			when Enrichment_NCD = 'N' then 0.5707
+			when Enrichment_NCD = 'O' then 0.5466
+			when Enrichment_NCD = 'P' then 0.5235
+			when Enrichment_NCD = 'Z' then 1
+			else 1
+		end as Calc_NCD
+      ,[Policy_DrivingRestrictions]
+	  ,case
+			when Policy_DrivingRestrictions = 'Named Drivers' then 0.8018
+			else 1
+		end as Calc_DrivingRestrictions
+      ,[Policy_IndicativePayment]
+	  ,case 
+			when Policy_IndicativePayment = 'Annually' then 0.4759
+			else 1 
+		end as calc_IndicativePayment
+      ,[Policy_QuoteLag]
+	  ,case 
+			when Policy_QuoteLag = 0 then 1
+			when Policy_QuoteLag between 1 and 2 then 0.7278
+			when Policy_QuoteLag between 3 and 9999 then 0.4666
+		end as calc_Quotelag
+      ,[Price_NWP]
+	  ,case when Price_NWP is NULL then 0.7138
+			when Price_NWP between 0 and 99 then 0.7138
+			when Price_NWP between 99.01 and 149.99 then 0.7446
+			when Price_NWP between 150 and 199.99 then 0.7766
+			when Price_NWP between 200 and 249.99 then 0.8100
+			when Price_NWP between 250 and 299.99 then 0.8449
+			when Price_NWP between 300 and 349.99 then 0.8813
+			when Price_NWP between 350 and 399.99 then 0.9192
+			when Price_NWP between 400 and 449.99 then 0.9587
+			when Price_NWP between 450 and 499.99 then 1.0
+			when Price_NWP between 500 and 549.99 then 1.0430
+			when Price_NWP between 550 and 599.99 then 1.0879
+			when Price_NWP between 600 and 649.99 then 1.1347
+			when Price_NWP between 650 and 699.99 then 1.1836
+			when Price_NWP between 700 and 749.99 then 1.2345
+			when Price_NWP between 750 and 799.99 then 1.2876
+			when Price_NWP between 800 and 849.99 then 1.3431
+			when Price_NWP between 850 and 899.99 then 1.4009
+			when Price_NWP between 900 and 949.99 then 1.4611
+			when Price_NWP between 950 and 999.99 then 1.5240
+			when Price_NWP between 1000 and 1049.99 then 1.5896
+			when Price_NWP between 1050 and 1099.99 then 1.6580
+			when Price_NWP between 1100 and 1149.99 then 1.7294
+			when Price_NWP between 1150 and 1199.99 then 1.8038
+			when Price_NWP between 1200 and 1249.99 then 1.8814
+			when Price_NWP between 1250 and 1299.99 then 1.9624
+			when Price_NWP between 1300 and 1399.99 then 2.0469
+			when Price_NWP between 1400 and 1499.99 then 2.1349
+			when Price_NWP between 1500 and 1999.99 then 2.2268
+			when Price_NWP between 2000 and 2999.99 then 2.3227
+			when Price_NWP between 3000 and 3999.99 then 2.4226
+			when Price_NWP between 4000 and 4999.99 then 2.5260
+			when Price_NWP between 5000 and 999999.99 then 2.6356
+		end as Calc_NWP
+      ,[Proposer_Age]
+	  ,case 
+			when Proposer_Age is null then 1
+			when Proposer_Age between 1 and 49 then 1
+			when Proposer_Age >= 50 then 0.8142
+		end as calc_age
+      ,[Vehicle_Mileage]
+	  ,case 
+			when Vehicle_Mileage is null then 1
+			when Vehicle_Mileage between 1 and 999 then 1.8795
+			when Vehicle_Mileage >= 1000 then 1
+			else 1
+		end as calc_mileage
+      ,[Vehicle_Value]
+	  ,case
+			when Vehicle_Value is null then 1.2550
+			when Vehicle_Value between 0 and 499.99 then 1
+			when Vehicle_Value between 500 and 999.99 then 1
+			when Vehicle_Value between 1000 and 1999.99 then 1
+			when Vehicle_Value between 2000 and 3999.99 then 0.8927
+			when Vehicle_Value between 4000 and 5999.99 then 0.7968
+			when Vehicle_Value between 6000 and 7999.99 then 0.7113
+			when Vehicle_Value between 8000 and 9999.99 then 0.6350
+			when Vehicle_Value between 10000 and 14999.99 then 0.5668
+			when Vehicle_Value between 15000 and 19999.99 then 0.5060
+			when Vehicle_Value between 20000 and 24999.99 then 0.4517
+			when Vehicle_Value between 25000 and 29999.99 then 0.4032
+			when Vehicle_Value between 30000 and 999999 then 0.3599
+		end as calc_Vehicle_Value
+      ,[Vehicle_WhereKept]
+	  ,case 
+			when Vehicle_WhereKept = 'Garage' then 1.2853
+			else 1
+		end as calc_Wherekept
+      ,[Enrichment_RenewedCount]
+	  	  ,case
+			when Enrichment_RenewedCount is NULL then 1.08
+			when Enrichment_RenewedCount = 'A' then 1
+			when Enrichment_RenewedCount = 'B' then 0.9259
+			when Enrichment_RenewedCount = 'C' then 0.8573
+			when Enrichment_RenewedCount = 'D' then 0.7937
+			when Enrichment_RenewedCount = 'E' then 0.7349
+			when Enrichment_RenewedCount = 'F' then 0.6805
+			when Enrichment_RenewedCount = 'G' then 0.6300
+			when Enrichment_RenewedCount = 'H' then 0.5833
+			when Enrichment_RenewedCount = 'I' then 0.5401
+			when Enrichment_RenewedCount = 'J' then 0.5001
+			when Enrichment_RenewedCount = 'K' then 0.4630
+			when Enrichment_RenewedCount = 'L' then 0.4287
+			when Enrichment_RenewedCount = 'M' then 0.3969
+			when Enrichment_RenewedCount = 'N' then 0.3675
+			when Enrichment_RenewedCount = 'O' then 0.3403
+			when Enrichment_RenewedCount = 'P' then 0.3151
+			else 1.08
+		end as Calc_RenewedCount
+      ,[Enrichment_TotalCancCount]
+	  	  ,case
+			when Enrichment_TotalCancCount is NULL then 1
+			when Enrichment_TotalCancCount = 'A' then 0.6304
+			when Enrichment_TotalCancCount = 'B' then 1.1608
+			when Enrichment_TotalCancCount = 'C' then 1.3474
+			when Enrichment_TotalCancCount = 'D' then 1.5640
+			when Enrichment_TotalCancCount = 'E' then 1.8154
+			when Enrichment_TotalCancCount = 'F' then 2.1073
+			when Enrichment_TotalCancCount = 'G' then 2.1073
+			when Enrichment_TotalCancCount = 'H' then 2.1073
+			when Enrichment_TotalCancCount = 'I' then 2.1073
+			when Enrichment_TotalCancCount = 'J' then 2.1073
+			when Enrichment_TotalCancCount = 'K' then 2.1073
+			when Enrichment_TotalCancCount = 'L' then 2.1073
+			when Enrichment_TotalCancCount = 'M' then 2.1073
+			when Enrichment_TotalCancCount = 'N' then 2.1073
+			when Enrichment_TotalCancCount = 'O' then 2.1073
+			when Enrichment_TotalCancCount = 'P' then 2.1073
+			else 1.0
+		end as Calc_TotalCancCount
+	,quote_hour
+	,case 
+		when Quote_Hour is null then 0.8325
+		when Quote_Hour between 0 and 6 then 1
+		when Quote_Hour between 7 and 22 then 0.8325
+		when Quote_Hour between 23 and 24 then 1
+	end as calc_quote_Hour
+	
+INTO Pricing_DB.Pricing.Van_DebtBandingsCalculator_Current
+FROM Pricing_DataMart.Pricing.CDLRadarSales
+where Policy_EventType ='NB'
+
+
+
+
+
+alter table Pricing_DB.Pricing.Van_DebtBandingsCalculator_Current
+add Valuebuckets as ((27.744 *calc_age
+*Calc_Delphi
+*Calc_DrivingRestrictions
+*calc_ID
+*calc_IndicativePayment
+*calc_mileage
+*Calc_NCD
+*Calc_NWP
+*calc_quote_Hour
+*calc_Quotelag
+*Calc_RenewedCount
+*Calc_TotalCancCount
+*calc_Vehicle_Value
+*calc_Wherekept )/Price_NWP)*100
