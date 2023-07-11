@@ -1,3 +1,4 @@
+-- random number generator and joining other tables 
 select
 case 
 	when Valuebuckets between 0 and 0.637560927182563 then 1
