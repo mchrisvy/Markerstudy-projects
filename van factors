@@ -1,4 +1,5 @@
 ///creating a new table from another table to give factor scores
+///based on RADAR results
 
 
 --drop table if exists Pricing_DB.Pricing.Van_DebtBandingsCalculator_Current
