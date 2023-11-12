@@ -41,5 +41,5 @@ Policy_SoldFlag
 ,case when Policy_SoldDate >= '2023-04-20' then 'Post'
  when Policy_SoldDate between DATEADD(day, -((DATEDIFF(day, '2023-04-20',GETDATE()))), '2023-04-20') and '2023-04-20' then 'Pre'
 else NULL end as InterestTrial
-FROM Pricing_DataMart.Pricing.CDLRadarSales
+FROM Database
 where Policy_SoldDate >= '2023-01-01' and Policy_Product = 'Van' and Policy_EventType = 'NB'
